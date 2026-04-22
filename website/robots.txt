@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pi-websearch-crawl4ai.codingcoffee.me/sitemap.xml
+Sitemap: https://pi-websearch-crawl4ai.codingcoffee.dev/sitemap.xml

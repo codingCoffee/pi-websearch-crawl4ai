@@ -58,6 +58,6 @@
   <text x="60" y="404" class="sans dim" font-size="30" font-weight="500" xml:space="preserve">Let your LLM crawl and see the <tspan class="mono fg">web</tspan></text>
 
   <!-- Footer -->
-  <text x="60" y="592" class="mono mute" font-size="18">pi-websearch-crawl4ai.codingcoffee.me</text>
+  <text x="60" y="592" class="mono mute" font-size="18">pi-websearch-crawl4ai.codingcoffee.dev</text>
   <text x="1140" y="592" text-anchor="end" class="sans mute" font-size="18" xml:space="preserve">crafted by <tspan class="fg">Ameya Shenoy</tspan></text>
 </svg>

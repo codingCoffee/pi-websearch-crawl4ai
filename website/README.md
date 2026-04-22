@@ -1,7 +1,7 @@
 # website/
 
 Marketing site for **pi-websearch-crawl4ai**, served at
-<https://pi-websearch-crawl4ai.codingcoffee.me/>.
+<https://pi-websearch-crawl4ai.codingcoffee.dev/>.
 
 This directory is **not** shipped with the npm package. The root
 `package.json` `files` array only allows `index.ts`, `README.md`, and
@@ -42,6 +42,6 @@ docker run --rm -p 8080:80 pi-websearch-crawl4ai-site
 
 ## Deploy
 
-Point `pi-websearch-crawl4ai.codingcoffee.me` at whatever runs the container
+Point `pi-websearch-crawl4ai.codingcoffee.dev` at whatever runs the container
 (Fly, Railway, a VPS behind Caddy/Traefik, etc.). TLS is assumed to be
 terminated upstream — the container only speaks plain HTTP on `:80`.
