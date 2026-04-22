@@ -1,0 +1,6 @@
+services:
+  crawl4ai:
+    image: unclecode/crawl4ai:0.8.6
+    restart: unless-stopped
+    ports:
+      - 11235:11235

@@ -1,0 +1,17 @@
+{
+  "name": "pi-websearch-crawl4ai",
+  "version": "0.1.0",
+  "description": "pi extension: fetch web content via a Crawl4AI server (for use when the bash tool is disabled)",
+  "private": true,
+  "type": "module",
+  "pi": {
+    "extensions": [
+      "./index.ts"
+    ]
+  },
+  "scripts": {
+    "clean": "echo 'nothing to clean'",
+    "build": "echo 'nothing to build'",
+    "check": "echo 'nothing to check'"
+  }
+}
