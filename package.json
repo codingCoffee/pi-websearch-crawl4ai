@@ -1,9 +1,37 @@
 {
-  "name": "pi-websearch-crawl4ai",
+  "name": "@codingcoffee/pi-websearch-crawl4ai",
   "version": "0.1.0",
-  "description": "pi extension: fetch web content via a Crawl4AI server (for use when the bash tool is disabled)",
-  "private": true,
+  "description": "pi extension: fetch web content via a Crawl4AI server — use when the bash tool (curl/wget) is disabled.",
+  "keywords": [
+    "pi",
+    "pi-coding-agent",
+    "pi-extension",
+    "crawl4ai",
+    "web-scraping",
+    "llm",
+    "agent",
+    "markdown",
+    "fetch"
+  ],
+  "author": {
+    "name": "Ameya Shenoy",
+    "url": "https://codingcoffee.dev"
+  },
+  "license": "MIT",
+  "homepage": "https://pi-websearch-crawl4ai.codingcoffee.me/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codingcoffee/pi-websearch-crawl4ai.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codingcoffee/pi-websearch-crawl4ai/issues"
+  },
   "type": "module",
+  "files": [
+    "index.ts",
+    "README.md",
+    "LICENSE"
+  ],
   "pi": {
     "extensions": [
       "./index.ts"

@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="theme-color" content="#0b0d0e" />
+
+<title>pi-websearch-crawl4ai — Web fetch for LLM agents when bash is disabled</title>
+<meta name="description" content="A pi extension that gives LLM coding agents web_fetch / web_crawl / web_screenshot tools backed by a self-hosted Crawl4AI server. Use it when the built-in bash tool (curl, wget) is disabled." />
+<meta name="keywords" content="pi, pi-coding-agent, pi extension, crawl4ai, web fetch, llm web scraping, ai agent web, markdown fetch, mcp web, readonly agent, codingcoffee, Ameya Shenoy" />
+<meta name="author" content="Ameya Shenoy" />
+<link rel="canonical" href="https://pi-websearch-crawl4ai.codingcoffee.me/" />
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="pi-websearch-crawl4ai" />
+<meta property="og:title" content="pi-websearch-crawl4ai — Web fetch for LLM agents when bash is disabled" />
+<meta property="og:description" content="Give your LLM web_fetch / web_crawl / web_screenshot tools backed by a self-hosted Crawl4AI server — so it can still read the web when bash, curl, and wget are off the table." />
+<meta property="og:url" content="https://pi-websearch-crawl4ai.codingcoffee.me/" />
+<meta property="og:image" content="https://pi-websearch-crawl4ai.codingcoffee.me/og.png" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="pi-websearch-crawl4ai — web_fetch succeeds, bash curl call rejected because bash is disabled." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="pi-websearch-crawl4ai — Web fetch for LLM agents when bash is disabled" />
+<meta name="twitter:description" content="web_fetch, web_crawl, web_screenshot, and more — backed by a self-hosted Crawl4AI server. For when you've turned the bash tool off." />
+<meta name="twitter:image" content="https://pi-websearch-crawl4ai.codingcoffee.me/og.png" />
+<meta name="twitter:image:alt" content="pi-websearch-crawl4ai — web fetch for LLM agents." />
+<meta name="twitter:creator" content="@codingcoffxe" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0d0e'/%3E%3Ctext x='50%25' y='56%25' text-anchor='middle' font-family='ui-monospace,monospace' font-size='18' fill='%23e9b949' font-weight='700'%3E%CF%80%3C/text%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "pi-websearch-crawl4ai",
+  "description": "A pi extension that exposes web_fetch, web_crawl, web_screenshot, and more to LLM coding agents, backed by a self-hosted Crawl4AI server. Intended for use when pi's built-in bash tool is disabled.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Linux, macOS",
+  "url": "https://pi-websearch-crawl4ai.codingcoffee.me/",
+  "downloadUrl": "https://www.npmjs.com/package/@codingcoffee/pi-websearch-crawl4ai",
+  "codeRepository": "https://github.com/codingcoffee/pi-websearch-crawl4ai",
+  "license": "https://opensource.org/licenses/MIT",
+  "author": {
+    "@type": "Person",
+    "name": "Ameya Shenoy",
+    "url": "https://codingcoffee.dev"
+  },
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+}
+</script>
+
+<style>
+  :root {
+    --bg:        #0b0d0e;
+    --bg-elev:   #121416;
+    --bg-sink:  #08090a;
+    --panel:     #14171a;
+    --border:    #23272c;
+    --border-hi: #2f343a;
+    --fg:        #e6e7e8;
+    --fg-dim:    #a6adb4;
+    --fg-mute:   #6b7076;
+    --accent:    #e9b949;  /* warm amber — terminal-ish */
+    --accent-hi: #ffd166;
+    --ok:        #7bc97e;
+    --warn:      #e9b949;
+    --err:       #e06b6b;
+    --cyan:      #7dd3e0;
+    --mag:       #c792ea;
+    --radius:    10px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--fg); }
+  body {
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    background-image:
+      radial-gradient(1100px 520px at 85% -10%, rgba(233,185,73,0.08), transparent 60%),
+      radial-gradient(900px 420px at -10% 10%, rgba(125,211,224,0.06), transparent 60%);
+  }
+  code, pre, kbd, .mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { color: var(--accent-hi); text-decoration: underline; text-underline-offset: 3px; }
+  h1, h2, h3 { letter-spacing: -0.01em; line-height: 1.2; margin: 0 0 0.5em; }
+  h1 { font-size: clamp(2rem, 4.5vw, 3.25rem); font-weight: 700; }
+  h2 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-weight: 600; }
+  h3 { font-size: 1.1rem; font-weight: 600; }
+  p  { color: var(--fg-dim); }
+  ::selection { background: rgba(233,185,73,0.3); color: #fff; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* ── Nav ── */
+  nav.top {
+    position: sticky; top: 0; z-index: 20;
+    backdrop-filter: blur(10px);
+    background: rgba(11,13,14,0.72);
+    border-bottom: 1px solid var(--border);
+  }
+  nav.top .inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  nav.top .brand { display: flex; align-items: center; gap: .6rem; font-weight: 700; }
+  nav.top .brand .glyph {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: linear-gradient(135deg, #1b1e22, #0d0f11);
+    border: 1px solid var(--border-hi);
+    display: grid; place-items: center;
+    color: var(--accent); font-family: "JetBrains Mono", monospace;
+  }
+  nav.top .brand small { color: var(--fg-mute); font-weight: 500; margin-left: .2rem; }
+  nav.top .links { display: flex; gap: 1.25rem; align-items: center; }
+  nav.top .links a { color: var(--fg-dim); font-size: .92rem; }
+  nav.top .links a:hover { color: var(--fg); text-decoration: none; }
+
+  /* ── Hero ── */
+  header.hero { padding: 5rem 0 3rem; }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: .55rem;
+    font-family: "JetBrains Mono", monospace;
+    font-size: .78rem; color: var(--fg-dim);
+    background: var(--bg-elev);
+    border: 1px solid var(--border);
+    padding: .4rem .7rem; border-radius: 999px;
+    margin-bottom: 1.25rem;
+  }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 10px var(--ok); }
+  header.hero h1 .accent { color: var(--accent); }
+  header.hero .sub { font-size: 1.12rem; max-width: 46rem; margin-top: 1rem; }
+  .cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.75rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .7rem 1.05rem;
+    border-radius: 8px; border: 1px solid var(--border-hi);
+    font-weight: 600; font-size: .95rem;
+    background: var(--bg-elev); color: var(--fg);
+    transition: transform .05s ease, border-color .15s ease, background .15s ease;
+  }
+  .btn:hover { text-decoration: none; border-color: var(--accent); }
+  .btn:active { transform: translateY(1px); }
+  .btn.primary { background: var(--accent); color: #1a1300; border-color: var(--accent); }
+  .btn.primary:hover { background: var(--accent-hi); border-color: var(--accent-hi); color: #1a1300; }
+  .btn svg { width: 16px; height: 16px; }
+
+  .badges { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.5rem; }
+  .badge {
+    font-family: "JetBrains Mono", monospace; font-size: .75rem;
+    background: var(--bg-elev); border: 1px solid var(--border);
+    color: var(--fg-dim);
+    padding: .3rem .6rem; border-radius: 6px;
+  }
+  .badge b { color: var(--fg); font-weight: 600; }
+
+  /* ── Terminal mock ── */
+  .term {
+    margin-top: 2.5rem;
+    background: var(--bg-sink);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.02) inset;
+  }
+  .term .bar {
+    display: flex; align-items: center; gap: .5rem;
+    padding: .55rem .75rem;
+    background: linear-gradient(180deg, #16191c, #111315);
+    border-bottom: 1px solid var(--border);
+  }
+  .term .bar .dotrow { display: flex; gap: .35rem; }
+  .term .bar .d { width: 11px; height: 11px; border-radius: 50%; background: #2a2d31; }
+  .term .bar .d.r { background: #e06b6b; }
+  .term .bar .d.y { background: #e9b949; }
+  .term .bar .d.g { background: #7bc97e; }
+  .term .bar .title {
+    font-family: "JetBrains Mono", monospace; font-size: .8rem;
+    color: var(--fg-mute); margin-left: .6rem;
+  }
+  .term pre {
+    margin: 0; padding: 1rem 1.1rem;
+    font-size: .88rem; line-height: 1.65;
+    color: var(--fg);
+    overflow-x: auto;
+  }
+  .term .p  { color: var(--accent); }    /* prompt */
+  .term .c  { color: var(--fg); }        /* command */
+  .term .o  { color: var(--fg-dim); }    /* output */
+  .term .ok { color: var(--ok); }
+  .term .er { color: var(--err); }
+  .term .cy { color: var(--cyan); }
+  .term .mg { color: var(--mag); }
+  .term .mu { color: var(--fg-mute); }
+  .term .kw { color: var(--accent); font-weight: 600; }
+
+  /* ── Sections ── */
+  section { padding: 4rem 0; border-top: 1px solid var(--border); }
+  section .lead { max-width: 46rem; margin-bottom: 2rem; }
+
+  /* ── Feature grid ── */
+  .grid {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.25rem 1.1rem;
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .card:hover { border-color: var(--border-hi); }
+  .card .ico {
+    width: 34px; height: 34px; border-radius: 8px;
+    display: grid; place-items: center;
+    background: rgba(233,185,73,0.08); color: var(--accent);
+    border: 1px solid rgba(233,185,73,0.18);
+    margin-bottom: .85rem; font-family: "JetBrains Mono", monospace; font-weight: 700;
+  }
+  .card h3 { color: var(--fg); margin-bottom: .35rem; }
+  .card p  { font-size: .94rem; margin: 0; color: var(--fg-dim); }
+
+  /* ── Code block ── */
+  .codeblock {
+    position: relative;
+    background: var(--bg-sink);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .codeblock .tag {
+    position: absolute; top: .55rem; right: .7rem;
+    font-family: "JetBrains Mono", monospace; font-size: .7rem;
+    color: var(--fg-mute); text-transform: uppercase; letter-spacing: .1em;
+  }
+  .codeblock pre {
+    margin: 0; padding: 1rem 1.1rem;
+    font-size: .88rem; line-height: 1.6; overflow-x: auto;
+  }
+  .codeblock .k  { color: var(--accent); }
+  .codeblock .s  { color: var(--ok); }
+  .codeblock .n  { color: var(--cyan); }
+  .codeblock .co { color: var(--fg-mute); font-style: italic; }
+
+  .two-col {
+    display: grid; gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: start;
+  }
+
+  /* ── Callouts ── */
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: linear-gradient(90deg, rgba(233,185,73,0.06), transparent);
+    padding: 1rem 1.15rem;
+    border-radius: 0 var(--radius) var(--radius) 0;
+    color: var(--fg-dim);
+  }
+  .callout b { color: var(--fg); }
+
+  /* ── Tools table ── */
+  .tools {
+    width: 100%; border-collapse: collapse;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    font-size: .93rem;
+  }
+  .tools th, .tools td {
+    text-align: left; padding: .7rem .95rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .tools thead th {
+    background: var(--bg-elev); color: var(--fg-dim);
+    font-weight: 600; font-size: .82rem; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .tools tbody tr:last-child td { border-bottom: none; }
+  .tools td code { color: var(--accent); font-size: .88rem; }
+  .tools td.ep code { color: var(--cyan); }
+  .tools-wrap { overflow-x: auto; }
+
+  /* ── Stats strip ── */
+  .stats {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    margin-top: 2rem;
+  }
+  .stat {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1.1rem 1.2rem;
+  }
+  .stat .n { font-family: "JetBrains Mono", monospace; font-size: 1.8rem; font-weight: 700; color: var(--accent); }
+  .stat .l { color: var(--fg-dim); font-size: .9rem; margin-top: .15rem; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0 3rem;
+    color: var(--fg-mute);
+    font-size: .9rem;
+  }
+  footer .row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; }
+  footer a { color: var(--fg-dim); }
+  footer a:hover { color: var(--accent); }
+  footer .links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+
+  @media (max-width: 640px) {
+    header.hero { padding: 3rem 0 2rem; }
+    nav.top .links a:not(.ghbtn) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="top">
+  <div class="wrap inner">
+    <a href="/" class="brand" aria-label="pi-websearch-crawl4ai home">
+      <span class="glyph">π</span>
+      <span>pi-websearch-crawl4ai <small>/ extension</small></span>
+    </a>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#tools">Tools</a>
+      <a href="#install">Install</a>
+      <a href="#config">Config</a>
+      <a class="ghbtn" href="https://github.com/codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">GitHub →</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>pi extension · <span data-npm-version>v…</span> · MIT</span>
+    <h1>Let your LLM <span class="accent">crawl &amp; see</span><br/>the web.</h1>
+    <p class="sub">
+      <b style="color:var(--fg)">pi-websearch-crawl4ai</b> is a
+      <a href="https://github.com/mariozechner/pi" target="_blank" rel="noopener">pi</a>
+      extension that gives your coding agent a set of
+      <code>web_fetch</code> / <code>web_crawl</code> / <code>web_screenshot</code>
+      tools, backed by a self-hosted
+      <a href="https://docs.crawl4ai.com/" target="_blank" rel="noopener">Crawl4AI</a>
+      server. Clean markdown, sanitized HTML, and full-page screenshots — even
+      after you disable pi's <code>bash</code> tool and take <code>curl</code>
+      away.
+    </p>
+
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .2a8 8 0 0 0-2.53 15.6c.4.07.55-.17.55-.38v-1.5c-2.23.48-2.7-.95-2.7-.95-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.72 1.22 1.87.87 2.33.67.07-.52.28-.88.5-1.08-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.22 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.24.54.73.54 1.47v2.18c0 .21.15.46.55.38A8 8 0 0 0 8 .2"/></svg>
+        View on GitHub
+      </a>
+      <a class="btn" href="https://www.npmjs.com/package/@codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M0 0h16v16H0zM3 3v10h5V5h3v8h2V3z" fill="#cb3837"/></svg>
+        npm package
+      </a>
+      <a class="btn" href="#install">Quick install ↓</a>
+    </div>
+
+    <div class="badges" aria-label="at a glance">
+      <span class="badge">✓ <b>6</b> web tools registered</span>
+      <span class="badge">✓ <b>0</b> extra npm deps</span>
+      <span class="badge">✓ self-hosted — <b>your</b> Crawl4AI server</span>
+      <span class="badge">✓ works with <code>--tools read,write,edit,web_fetch,…</code></span>
+    </div>
+
+    <div class="term" aria-label="example session">
+      <div class="bar">
+        <div class="dotrow"><span class="d r"></span><span class="d y"></span><span class="d g"></span></div>
+        <span class="title">~ pi  —  bash disabled · web_fetch enabled</span>
+      </div>
+<pre><span class="mu">// User: summarize https://docs.crawl4ai.com/core/markdown-generation/</span>
+<span class="p">▶</span> <span class="c">web_fetch(url=<span class="cy">"https://docs.crawl4ai.com/core/markdown-generation/"</span>,
+                   filter=<span class="cy">"fit"</span>)</span>
+<span class="o">  # Markdown Generation
+  Crawl4AI transforms HTML into clean, LLM-friendly Markdown …</span>
+<span class="ok">  ✓ 200 OK · 4,812 chars · filter=fit</span>
+
+<span class="p">▶</span> <span class="c">web_crawl(urls=[<span class="cy">"https://a.example"</span>, <span class="cy">"https://b.example"</span>],
+                   crawler_config={<span class="cy">"type"</span>:<span class="cy">"CrawlerRunConfig"</span>,
+                                   <span class="cy">"params"</span>:{<span class="cy">"cache_mode"</span>:<span class="cy">"bypass"</span>}})</span>
+<span class="o">  ## https://a.example    success=true status=200
+  ## https://b.example    success=true status=200</span>
+
+<span class="p">▶</span> <span class="c">bash(command=<span class="cy">"curl https://example.com"</span>)</span>
+<span class="er">  ✗ tool <span class="kw">bash</span> is disabled in this session — use web_fetch instead</span>
+
+<span class="p">▶</span> <span class="c">web_screenshot(url=<span class="cy">"https://example.com"</span>)</span>
+<span class="ok">  ✓ png 118 KB · returned inline to the model</span>
+</pre>
+    </div>
+  </div>
+</header>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Why this exists</h2>
+    <p class="lead">
+      The safest pi sessions run with the <code>bash</code> tool turned off —
+      no shell, no <code>curl</code>, no <code>wget</code>, nothing to
+      <code>rm -rf</code>. But the moment you do that, your agent loses the
+      ability to read the web. No docs lookups. No changelog peeks. No
+      “grab that URL the user pasted.”
+    </p>
+    <p class="lead">
+      <b style="color:var(--fg)">pi-websearch-crawl4ai</b> gives the web back,
+      but through a narrow door: a handful of purpose-built tools that talk
+      HTTP to a
+      <a href="https://docs.crawl4ai.com/" target="_blank" rel="noopener">Crawl4AI</a>
+      server <em>you</em> run. No outbound shell. No arbitrary subprocesses.
+      No third-party SaaS to leak your prompts to. Just <code>fetch()</code>
+      to <code>http://localhost:11235</code>.
+    </p>
+
+    <div class="stats" role="list">
+      <div class="stat" role="listitem">
+        <div class="n">6</div>
+        <div class="l">web tools exposed to the agent</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">0</div>
+        <div class="l">runtime npm dependencies — uses global <code>fetch</code></div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">localhost</div>
+        <div class="l">Crawl4AI runs on your box; nothing leaves your network</div>
+      </div>
+      <div class="stat" role="listitem">
+        <div class="n">1 file</div>
+        <div class="l">single-file extension, hot-loadable by pi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <h2>The six tools</h2>
+    <p class="lead">
+      Each tool is a thin, typed wrapper over a Crawl4AI REST endpoint,
+      registered with pi so the model can call it directly. Every tool ships
+      with <code>promptSnippet</code> and <code>promptGuidelines</code> so the
+      agent knows to prefer <code>web_fetch</code> over
+      <code>bash + curl</code>.
+    </p>
+
+    <div class="tools-wrap">
+      <table class="tools" aria-label="tools reference">
+        <thead>
+          <tr><th>Tool</th><th>Endpoint</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>web_fetch</code></td>
+            <td class="ep"><code>POST /md</code></td>
+            <td>URL → clean Markdown. Filters: <code>fit</code> (readability), <code>raw</code>, <code>bm25</code>, <code>llm</code>. Supports <code>query</code>, <code>max_chars</code>.</td>
+          </tr>
+          <tr>
+            <td><code>web_fetch_html</code></td>
+            <td class="ep"><code>POST /html</code></td>
+            <td>Sanitized, preprocessed HTML when you need DOM structure instead of prose.</td>
+          </tr>
+          <tr>
+            <td><code>web_crawl</code></td>
+            <td class="ep"><code>POST /crawl</code></td>
+            <td>Batch-crawl many URLs with typed <code>BrowserConfig</code> / <code>CrawlerRunConfig</code> passed straight through.</td>
+          </tr>
+          <tr>
+            <td><code>web_execute_js</code></td>
+            <td class="ep"><code>POST /execute_js</code></td>
+            <td>Run JS snippets on a page and read the return values. For stuff behind dynamic interactions.</td>
+          </tr>
+          <tr>
+            <td><code>web_screenshot</code></td>
+            <td class="ep"><code>POST /screenshot</code></td>
+            <td>Full-page PNG screenshot, returned <em>inline</em> as an image so vision-capable models can look at it.</td>
+          </tr>
+          <tr>
+            <td><code>web_ask</code></td>
+            <td class="ep"><code>GET /ask</code></td>
+            <td>Query Crawl4AI's own library docs — useful only when the model needs to configure <code>web_crawl</code> itself.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lead" style="margin-top:1.5rem">
+      Plus three slash commands: <code>/crawl4ai-status</code> (pings <code>/health</code>),
+      <code>/crawl4ai-url &lt;url&gt;</code>, and <code>/crawl4ai-token &lt;tok&gt;</code>
+      — for switching servers or toggling JWT without a restart.
+    </p>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <h2>What you get</h2>
+    <p class="lead">The small set of things that matter for an LLM's web IO.</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="ico">MD</div>
+        <h3>LLM-grade Markdown</h3>
+        <p>Crawl4AI's readability-style <code>fit</code> filter strips chrome, ads, and nav; what reaches the model is what a human would read — tokens well spent.</p>
+      </div>
+      <div class="card">
+        <div class="ico">BM</div>
+        <h3>Query-aware fetching</h3>
+        <p><code>filter="bm25"</code> + a <code>query</code> lets the agent pull only the most relevant chunks of a long page, keeping context windows honest.</p>
+      </div>
+      <div class="card">
+        <div class="ico">BA</div>
+        <h3>Batch crawling</h3>
+        <p><code>web_crawl</code> takes up to 100 URLs at once with a shared typed config, returning per-URL markdown, links, metadata, and status.</p>
+      </div>
+      <div class="card">
+        <div class="ico">JS</div>
+        <h3>JS execution</h3>
+        <p><code>web_execute_js</code> runs arbitrary snippets against the live DOM (<code>return document.title</code>, hrefs, JSON state) for pages plain fetching can't crack.</p>
+      </div>
+      <div class="card">
+        <div class="ico">IMG</div>
+        <h3>Inline screenshots</h3>
+        <p><code>web_screenshot</code> returns PNG bytes as an <code>ImageContent</code> block — vision-capable models see the page exactly as a browser would render it.</p>
+      </div>
+      <div class="card">
+        <div class="ico">SH</div>
+        <h3>Self-hosted by default</h3>
+        <p>Crawl4AI runs in Docker on <code>localhost:11235</code>. Your URLs, prompts, and cookies never leave your network, unlike managed scraping APIs.</p>
+      </div>
+      <div class="card">
+        <div class="ico">CT</div>
+        <h3>Bounded output</h3>
+        <p>Every tool honors a <code>max_chars</code> / <code>max_chars_per_result</code> cap. No agent can nuke its context by fetching a 4 MB blog.</p>
+      </div>
+      <div class="card">
+        <div class="ico">HS</div>
+        <h3>Hot config</h3>
+        <p>Change the Crawl4AI endpoint or JWT on the fly with <code>/crawl4ai-url</code> / <code>/crawl4ai-token</code> — no reload, no restart.</p>
+      </div>
+      <div class="card">
+        <div class="ico">π</div>
+        <h3>Pure pi extension</h3>
+        <p>Single-file TypeScript, zero runtime deps. Installs via <code>pi install</code>. No daemons, no extra services — just tools the agent can call.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2>Install</h2>
+    <p class="lead">
+      You need two things: a running Crawl4AI server, and the extension loaded
+      into pi. Neither requires <code>npm</code> on your <code>PATH</code>;
+      Docker runs the server, pi runs the extension.
+    </p>
+
+    <div class="two-col">
+      <div class="codeblock">
+        <span class="tag">1 · start crawl4ai</span>
+<pre><span class="co"># one-liner Docker install; exposes http://localhost:11235</span>
+<span class="k">docker</span> run -d \
+  -p <span class="n">11235</span>:<span class="n">11235</span> \
+  --name crawl4ai \
+  --shm-size=<span class="n">1g</span> \
+  <span class="s">unclecode/crawl4ai:latest</span>
+
+<span class="co"># sanity check</span>
+<span class="k">curl</span> http://localhost:11235/health</pre>
+      </div>
+
+      <div class="codeblock">
+        <span class="tag">2 · install the extension</span>
+<pre><span class="co"># from npm (recommended)</span>
+<span class="k">pi</span> install npm:@codingcoffee/pi-websearch-crawl4ai
+
+<span class="co"># or from git</span>
+<span class="k">pi</span> install git:github.com/codingcoffee/pi-websearch-crawl4ai
+
+<span class="co"># try without installing</span>
+<span class="k">pi</span> -e npm:@codingcoffee/pi-websearch-crawl4ai</pre>
+      </div>
+    </div>
+
+    <p class="lead" style="margin-top:1.5rem">
+      Then lock pi down to just the tools you trust, and add
+      <code>web_fetch</code> / <code>web_crawl</code> to the allowlist — your
+      agent can now read the web without ever seeing a shell:
+    </p>
+
+    <div class="codeblock">
+      <span class="tag">example: bash-free pi session</span>
+<pre><span class="k">pi</span> --tools read,write,edit,web_fetch,web_crawl,web_screenshot
+
+<span class="co"># inside pi</span>
+<span class="p">▶</span> /crawl4ai-status    <span class="co"># confirm the server is up</span>
+<span class="p">▶</span> <span class="s">"Read https://example.com and summarize it."</span></pre>
+    </div>
+  </div>
+</section>
+
+<section id="config">
+  <div class="wrap">
+    <h2>Configuration</h2>
+    <p class="lead">
+      Three sources, in priority order: CLI flag &gt; environment variable
+      &gt; default. All three are per-session; nothing is written to disk.
+    </p>
+
+    <div class="tools-wrap">
+      <table class="tools" aria-label="configuration">
+        <thead>
+          <tr><th>Setting</th><th>Env var</th><th>CLI flag</th><th>Default</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Base URL</td>
+            <td><code>CRAWL4AI_BASE_URL</code></td>
+            <td><code>--crawl4ai-url &lt;url&gt;</code></td>
+            <td><code>http://localhost:11235</code></td>
+          </tr>
+          <tr>
+            <td>Bearer token</td>
+            <td><code>CRAWL4AI_TOKEN</code></td>
+            <td><code>--crawl4ai-token &lt;tok&gt;</code></td>
+            <td><em>(none)</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="lead" style="margin-top:1.5rem">
+      At runtime you can retarget the extension without restarting pi:
+    </p>
+
+    <div class="codeblock">
+      <span class="tag">in pi</span>
+<pre>/crawl4ai-status                         <span class="co"># show current config + /health</span>
+/crawl4ai-url http://10.0.0.9:11235      <span class="co"># switch to a LAN server</span>
+/crawl4ai-token eyJhbGciOi…              <span class="co"># set JWT for authenticated servers</span>
+/crawl4ai-token                          <span class="co"># clear the token</span></pre>
+    </div>
+
+    <div class="callout" style="margin-top:1.5rem">
+      <b>Production note.</b> Crawl4AI supports rate limiting, JWT auth,
+      allow-lists, and a managed <code>config.yml</code> out of the box. Run
+      it behind an internal reverse proxy, point the extension at it with
+      <code>CRAWL4AI_BASE_URL</code>, and you get a single place to audit
+      every URL your fleet of agents fetches. See the
+      <a href="https://github.com/unclecode/crawl4ai/blob/main/deploy/docker/README.md" target="_blank" rel="noopener">Crawl4AI Docker guide</a>
+      for the knobs.
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap" style="text-align:center">
+    <h2>Web access for agents, without the shell.</h2>
+    <p class="lead" style="margin:.5rem auto 1.5rem">Disable <code>bash</code>. Install this. Let the model read.</p>
+    <div class="cta" style="justify-content:center">
+      <a class="btn primary" href="https://github.com/codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">Get it on GitHub</a>
+      <a class="btn" href="https://www.npmjs.com/package/@codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">View on npm</a>
+      <a class="btn" href="https://docs.crawl4ai.com/" target="_blank" rel="noopener">Crawl4AI docs ↗</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap row">
+    <div>
+      © 2026 pi-websearch-crawl4ai · Crafted by <a href="https://codingcoffee.dev" target="_blank" rel="noopener author">Ameya Shenoy</a>
+    </div>
+    <div class="links">
+      <a href="https://github.com/codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.npmjs.com/package/@codingcoffee/pi-websearch-crawl4ai" target="_blank" rel="noopener">npm</a>
+      <a href="https://github.com/mariozechner/pi" target="_blank" rel="noopener">pi</a>
+      <a href="https://docs.crawl4ai.com/" target="_blank" rel="noopener">Crawl4AI</a>
+      <a href="https://github.com/codingcoffee/pi-websearch-crawl4ai/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Fetch the latest published version from the npm registry and splice it
+  // into any element tagged with [data-npm-version]. Falls back silently to
+  // the placeholder if the request fails (offline, CSP, rate-limit, etc.) —
+  // the page stays readable either way.
+  (function () {
+    var PKG = "@codingcoffee/pi-websearch-crawl4ai";
+    var URL = "https://registry.npmjs.org/" + PKG + "/latest";
+    try {
+      fetch(URL, { headers: { Accept: "application/json" } })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (!j || !j.version) return;
+          var v = String(j.version);
+          document.querySelectorAll("[data-npm-version]").forEach(function (el) {
+            el.textContent = "v" + v;
+          });
+        })
+        .catch(function () { /* keep placeholder */ });
+    } catch (_) { /* keep placeholder */ }
+  })();
+</script>
+</body>
+</html>

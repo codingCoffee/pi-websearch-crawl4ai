@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="pi-websearch-crawl4ai — web fetch for LLM agents when bash is disabled">
+  <defs>
+    <!-- Background gradient: dark base with warm amber glow top-right -->
+    <radialGradient id="glowA" cx="85%" cy="-5%" r="65%">
+      <stop offset="0%"  stop-color="#e9b949" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#e9b949" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="-5%" cy="15%" r="55%">
+      <stop offset="0%"  stop-color="#7dd3e0" stop-opacity="0.10"/>
+      <stop offset="60%" stop-color="#7dd3e0" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Subtle grid -->
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1a1d20" stroke-width="1"/>
+    </pattern>
+
+    <style>
+      .sans   { font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif; }
+      .mono   { font-family: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace; }
+      .fg     { fill: #e6e7e8; }
+      .dim    { fill: #a6adb4; }
+      .mute   { fill: #6b7076; }
+      .accent { fill: #e9b949; }
+      .ok     { fill: #7bc97e; }
+      .err    { fill: #e06b6b; }
+      .cy     { fill: #7dd3e0; }
+    </style>
+  </defs>
+
+  <!-- Base background -->
+  <rect width="1200" height="630" fill="#0b0d0e"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#glowA)"/>
+  <rect width="1200" height="630" fill="url(#glowB)"/>
+
+  <!-- Inset border -->
+  <rect x="24" y="24" width="1152" height="582" rx="18" ry="18" fill="none" stroke="#23272c" stroke-width="1"/>
+
+  <!-- Terminal dots (top-left chrome) -->
+  <g transform="translate(60 64)">
+    <circle cx="0"  cy="0" r="7" fill="#e06b6b"/>
+    <circle cx="22" cy="0" r="7" fill="#e9b949"/>
+    <circle cx="44" cy="0" r="7" fill="#7bc97e"/>
+  </g>
+
+  <!-- π badge (top-right) -->
+  <g transform="translate(1012 44)">
+    <rect width="136" height="52" rx="10" ry="10" fill="#121416" stroke="#2f343a" stroke-width="1"/>
+    <text x="22" y="26" dominant-baseline="central" class="mono accent" font-size="22" font-weight="700">π</text>
+    <text x="46" y="26" dominant-baseline="central" class="sans dim" font-size="16">extension</text>
+  </g>
+
+  <!-- Headline -->
+  <text x="60" y="320" class="sans fg" font-size="88" font-weight="700" letter-spacing="-1.5">pi-websearch-<tspan class="accent">crawl4ai</tspan></text>
+
+  <!-- Subhead -->
+  <text x="60" y="404" class="sans dim" font-size="30" font-weight="500" xml:space="preserve">Let your LLM crawl and see the <tspan class="mono fg">web</tspan></text>
+
+  <!-- Footer -->
+  <text x="60" y="592" class="mono mute" font-size="18">pi-websearch-crawl4ai.codingcoffee.me</text>
+  <text x="1140" y="592" text-anchor="end" class="sans mute" font-size="18" xml:space="preserve">crafted by <tspan class="fg">Ameya Shenoy</tspan></text>
+</svg>
