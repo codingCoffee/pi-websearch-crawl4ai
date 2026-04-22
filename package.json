@@ -1,11 +1,13 @@
 {
   "name": "@codingcoffee/pi-websearch-crawl4ai",
   "version": "0.1.0",
-  "description": "pi extension: fetch web content via a Crawl4AI server — use when the bash tool (curl/wget) is disabled.",
+  "description": "a pi extension to let your LLM crawl & see the web",
   "keywords": [
-    "pi",
-    "pi-coding-agent",
+    "pi-package",
     "pi-extension",
+    "pi",
+    "llm-tools",
+    "pi-coding-agent",
     "crawl4ai",
     "web-scraping",
     "llm",
@@ -18,7 +20,7 @@
     "url": "https://codingcoffee.dev"
   },
   "license": "MIT",
-  "homepage": "https://pi-websearch-crawl4ai.codingcoffee.me/",
+  "homepage": "https://pi-websearch-crawl4ai.codingcoffee.me",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/codingcoffee/pi-websearch-crawl4ai.git"
