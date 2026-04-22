@@ -1,6 +1,6 @@
 {
   "name": "@codingcoffee/pi-websearch-crawl4ai",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "a pi extension to let your LLM crawl & see the web",
   "keywords": [
     "pi-package",
