@@ -37,7 +37,8 @@
   "pi": {
     "extensions": [
       "./index.ts"
-    ]
+    ],
+    "image": "pi-websearch-crawl4ai.codingcoffee.dev/og.png"
   },
   "scripts": {
     "clean": "echo 'nothing to clean'",
