@@ -38,7 +38,7 @@
     "extensions": [
       "./index.ts"
     ],
-    "image": "pi-websearch-crawl4ai.codingcoffee.dev/og.png"
+    "image": "https://pi-websearch-crawl4ai.codingcoffee.dev/og.png"
   },
   "peerDependencies": {
     "@mariozechner/pi-coding-agent": "*",
