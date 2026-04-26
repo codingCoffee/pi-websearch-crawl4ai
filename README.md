@@ -1,6 +1,6 @@
 # pi-websearch-crawl4ai
 
-A [pi](https://github.com/mariozechner/pi) extension that lets the agent fetch
+A [pi](https://github.com/badlogic/pi-mono) extension that lets the agent fetch
 content from the web via a running [Crawl4AI](https://docs.crawl4ai.com/) server.
 
 **Intended use:** running pi with the `bash` tool disabled (so `curl` / `wget`
