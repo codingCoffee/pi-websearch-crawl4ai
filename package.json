@@ -40,6 +40,16 @@
     ],
     "image": "pi-websearch-crawl4ai.codingcoffee.dev/og.png"
   },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-ai": "*",
+    "@sinclair/typebox": "*"
+  },
+  "devDependencies": {
+    "@mariozechner/pi-coding-agent": "^0.70.0",
+    "@mariozechner/pi-ai": "^0.70.0",
+    "@sinclair/typebox": "^0.34.0"
+  },
   "scripts": {
     "clean": "echo 'nothing to clean'",
     "build": "echo 'nothing to build'",
